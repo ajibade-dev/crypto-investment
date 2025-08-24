@@ -26,7 +26,7 @@ app.use(express.urlencoded({ extended: true}))
 
 // ✅ Flexible CORS with whitelist
 const whitelist = [
-  'http://localhost:5000',              // local dev frontend
+  'http://localhost:3000',              // local dev frontend
   // 'http://localhost:3000',              // (optional, in case you test React dev server)
   'https://crypto-investment-eight.vercel.app', // your current frontend
   // 'https://yourcustomdomain.com'        // add custom domain when ready
@@ -42,7 +42,7 @@ const corsOptions = {
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie', 'Set-Cookie'],
 };
 
 app.use(cors(corsOptions));
