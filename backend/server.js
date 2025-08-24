@@ -17,7 +17,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5000", // for local dev
-      "https://crypto-investment-eight.vercel.app" // your deployed frontend
+      "https://crypto-investment-lqpo4ej4r-paul-the-devs-projects.vercel.app/" // your deployed frontend
     ],
     credentials: true,
   })
