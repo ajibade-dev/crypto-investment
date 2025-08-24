@@ -17,6 +17,8 @@ app.use('/api/users', userRoutes)
 
 
 app.get("/", (req, res) => res.send('Server is ready'))
+app.get("/health", (req, res) => res.status(200).send("OK"));
+
 
 app.use(notFound);
 app.use(errorHandler )
