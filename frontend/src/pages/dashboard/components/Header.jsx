@@ -57,7 +57,7 @@ export default function Header() {
         <div>
           {/* Display personalized welcome message if logged in */}
           {userInfo ? (
-            <h1 className="text-xl lg:text-3xl font-semibold font-heading">
+            <h1 className="text-md lg:text-3xl font-semibold font-heading">
               Welcome to your dashboard, <span className="text-[#222ad6]">{userInfo.name}</span> 👋
             </h1>
           ) : (
