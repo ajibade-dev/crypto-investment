@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useState } from "react";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -9,25 +10,47 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { useLogoutMutation } from "@/slices/usersApiSlice";
 import { logout } from "@/slices/authSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
+
 export default function Header() {
+
+  const [redirectHome, setRedirectHome] = useState(false);
+
   const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate()
   const [logoutApiCall] = useLogoutMutation();
 
+  if (redirectHome) {
+  return <Navigate to="/" replace />;
+}
+  // const logoutHandler = async () => {
+  //   try {
+  //     await logoutApiCall().unwrap();
+  //     dispatch (logout());
+  //     toast.success('Logout Succesful')
+  //      // Wait a tiny bit to let state update
+  //   setTimeout(() => {
+  //     navigate('/'); // redirect to main homepage
+  //   }, 50);
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // }
+
   const logoutHandler = async () => {
-    try {
-      await logoutApiCall().unwrap();
-      dispatch (logout());
-      navigate('/')
-      toast.success('Logout Succesful')
-    } catch (err) {
-      console.log(err)
-    }
+  try {
+    await logoutApiCall().unwrap();
+    dispatch(logout());
+    toast.success('Logout Successful');
+    setRedirectHome(true);  // trigger redirect
+  } catch (err) {
+    console.log(err);
   }
+};
+
   return (
     <header className="sticky top-0 z-30 bg-white border-b font-heading">
       <div className="flex items-center justify-between px-4 py-3 md:px-6 md:py-5">

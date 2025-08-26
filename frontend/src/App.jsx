@@ -7,6 +7,7 @@ import Register from "./pages/Register";
 import MainDashboard from "./pages/dashboard/MainDashboard";
 import DashboardHome from "./pages/dashboard/pages/Home";
 import Deposit from "./pages/dashboard/pages/Deposit";
+import DepositPayments from "./pages/dashboard/pages/DepositPayments";
 import Withdraw from "./pages/dashboard/pages/Withdraw";
 import Plans from "./pages/dashboard/pages/Plans";
 import MyPlans from "./pages/dashboard/pages/MyPlans";
@@ -62,6 +63,7 @@ const [loading, setLoading] = useState(true);
     <Route path="withdraw" element={<Withdraw />} />
     <Route path="plans" element={<Plans />} />
     <Route path="my-plans" element={<MyPlans />} />
+    <Route path="deposit/payment" element={<DepositPayments />} />
     <Route path="transactions" element={<Transactions />} />
     <Route path="settings" element={<Settings />} />
   </Route>
