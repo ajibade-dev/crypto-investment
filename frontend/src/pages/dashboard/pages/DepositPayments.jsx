@@ -46,16 +46,17 @@ export default function DepositPayments() {
   const label = state.method.toUpperCase().replace("-", " ");
 
   return (
-    <div className="px-4 py-6 md:px-8">
-      <div className="max-w-3xl">
+    <div className="px-2 py-6 md:px-8">
+      <div className="md:max-w-3xl w-full">
         <Card className="shadow">
-          <CardHeader className="flex-row items-center justify-between gap-3">
+          <CardHeader className="flex col md:flex-row items-center justify-between gap-3">
             <CardTitle className="flex items-center gap-2">
               Make Payment
-              <Badge variant="secondary" className="ml-2 bg-[#222ad6] text-white">
+              
+            </CardTitle>
+            <Badge variant="secondary" className="ml-2 bg-[#222ad6] text-white">
                 Your payment method&nbsp;{label}
               </Badge>
-            </CardTitle>
           </CardHeader>
 
           <CardContent className="grid gap-6">
