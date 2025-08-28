@@ -14,7 +14,8 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
 const METHODS = [
-  { id: "usdc", label: "USDC", note: "Network: ETH" },
+  { id: "usdc-erc20", label: "usdc(erc20)", note: "Network: ETH" },
+  { id: "usdc-sol", label: "usdc(sol)", note: "Network: SOL" },
   { id: "usdt-erc20", label: "usdt(erc20)", note: "Network: ETH" },
   { id: "usdt-trc20", label: "usdt(trc20)", note: "Network: TRON" },
   { id: "btc", label: "bitcoin", note: "On-chain" },
