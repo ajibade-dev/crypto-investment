@@ -165,10 +165,14 @@ export default function DepositPayments() {
       fileInput.name = originalName;
 
       // ⭐ 6) Send deposit data to backend
-      const token = localStorage.getItem("token"); // must exist from login
+      
+
+console.log("🌍 API_URL being used:", import.meta.env.VITE_API_URL);
+console.log("📡 Full endpoint:", `${import.meta.env.VITE_API_URL}/api/transactions/recent`);
 
      const res = await fetch(`${API_URL}/api/deposits`, {
   method: "POST",
+  credentials: "include",
   headers: {
     "Content-Type": "application/json",
     Authorization: `Bearer ${token}`, // required for protect middleware

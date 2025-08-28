@@ -21,13 +21,16 @@ export default function DashboardHome() {
   const fetchRecent = async () => {
     try {
       setLoadingTx(true);
-      const token = localStorage.getItem("token");
+
+
+console.log("🌍 API_URL being used:", import.meta.env.VITE_API_URL);
+
 
       const res = await fetch(`${API_URL}/api/transactions/recent`, {
         method: "GET",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          Authorization: token ? `Bearer ${token}` : "",
         },
       });
 

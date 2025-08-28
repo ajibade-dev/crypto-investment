@@ -30,17 +30,38 @@ export default function Login() {
     }
   }, [navigate, userInfo])
 
+  // const submitHandler = async (e) => {
+  //   e.preventDefault()
+  //   try {
+  //     const res = await login({email, password}).unwrap();
+  //     dispatch(setCredentials({...res}))
+  //     navigate('/dashboard')
+  //     toast.success('Login Successful')
+  //   } catch (err) {
+  //     toast.error(err?.data?.message || err.error);
+  //   }
+  // }
+
   const submitHandler = async (e) => {
-    e.preventDefault()
-    try {
-      const res = await login({email, password}).unwrap();
-      dispatch(setCredentials({...res}))
-      navigate('/dashboard')
-      toast.success('Login Successful')
-    } catch (err) {
-      toast.error(err?.data?.message || err.error);
+  e.preventDefault();
+  try {
+    const res = await login({ email, password }).unwrap();
+
+    // ✅ Save token into Redux
+    dispatch(setCredentials({ ...res }));
+
+    // ✅ Save token into localStorage
+    if (res.token) {
+      localStorage.setItem("token", res.token);
     }
+
+    navigate("/dashboard");
+    toast.success("Login Successful");
+  } catch (err) {
+    toast.error(err?.data?.message || err.error);
   }
+};
+
 
 
   return (
