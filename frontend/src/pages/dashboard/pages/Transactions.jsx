@@ -4,12 +4,19 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 
+
+const API_URL = import.meta.env.VITE_API_URL;
+
 // 🔹 API fetch
 const fetchTransactions = async () => {
-  const res = await fetch("/api/deposits", {
+  const token = localStorage.getItem("token"); // JWT saved from login
+
+  const res = await fetch(`${API_URL}/api/deposits`, {
     method: "GET",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token ? `Bearer ${token}` : "", // send token
+    },
   });
 
   if (!res.ok) throw new Error("Failed to fetch deposits");

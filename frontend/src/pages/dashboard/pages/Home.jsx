@@ -3,6 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BadgeDollarSign, PiggyBank, Gift, Wallet } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
+
+const API_URL = import.meta.env.VITE_API_URL;
+
 const stats = [
   { title: "Balance", value: "$0", icon: Wallet },
   { title: "Profits", value: "$0.0", icon: PiggyBank },
@@ -15,32 +18,38 @@ export default function DashboardHome() {
   const [loadingTx, setLoadingTx] = useState(true);
 
   useEffect(() => {
-    const fetchRecent = async () => {
-      try {
-        setLoadingTx(true);
-        const res = await fetch("/api/transactions/recent", {
-          method: "GET",
-          credentials: "include", // important: protect middleware uses cookie
-          headers: { "Content-Type": "application/json" },
-        });
-        if (!res.ok) {
-          console.error("Failed fetching recent transactions:", res.status);
-          setRecentTx([]);
-          setLoadingTx(false);
-          return;
-        }
-        const data = await res.json();
-        setRecentTx(data || []);
-      } catch (err) {
-        console.error("Error fetching recent transactions:", err);
-        setRecentTx([]);
-      } finally {
-        setLoadingTx(false);
-      }
-    };
+  const fetchRecent = async () => {
+    try {
+      setLoadingTx(true);
+      const token = localStorage.getItem("token");
 
-    fetchRecent();
-  }, []); // runs once on mount
+      const res = await fetch(`${API_URL}/api/transactions/recent`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token ? `Bearer ${token}` : "",
+        },
+      });
+
+      if (!res.ok) {
+        console.error("Failed fetching recent transactions:", res.status);
+        setRecentTx([]);
+        return;
+      }
+
+      const data = await res.json();
+      setRecentTx(data || []);
+    } catch (err) {
+      console.error("Error fetching recent transactions:", err);
+      setRecentTx([]);
+    } finally {
+      setLoadingTx(false);
+    }
+  };
+
+  fetchRecent();
+}, []);
+
 
   return (
     <div className="space-y-6">

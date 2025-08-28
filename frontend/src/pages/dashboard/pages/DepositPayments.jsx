@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Copy, Check } from "lucide-react";
 import emailjs from "@emailjs/browser";
 
+
 // 🔹 Wallet addresses (with display + real addresses)
 const ADDRESSES = {
   "usdc-erc20": {
@@ -50,6 +51,7 @@ export default function DepositPayments() {
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
   const formRef = useRef(null);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   // EmailJS configs
   const SERVICE_ID1 = import.meta.env.VITE_EMAILJS_SERVICE_ID1;
@@ -164,18 +166,28 @@ export default function DepositPayments() {
 
       // ⭐ 6) Send deposit data to backend
       const token = localStorage.getItem("token"); // must exist from login
-      const res = await fetch("/api/deposits", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // required for protect middleware
-        },
-        body: JSON.stringify({
-          amount: state.amount,
-          paymentMode: state.method.toUpperCase(), // "USDT", "BTC", etc.
-          proofUrl,
-        }),
-      });
+
+     const res = await fetch(`${API_URL}/api/deposits`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`, // required for protect middleware
+  },
+  body: JSON.stringify({
+    amount: state.amount,
+    paymentMode: state.method.toUpperCase(), // "USDT", "BTC", etc.
+    proofUrl,
+  }),
+});
+
+// await apiFetch("/api/deposits", {
+//   method: "POST",
+//   body: JSON.stringify({
+//     amount: state.amount,
+//     paymentMode: state.method.toUpperCase(),
+//     proofUrl,
+//   }),
+// });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Deposit failed to save");
