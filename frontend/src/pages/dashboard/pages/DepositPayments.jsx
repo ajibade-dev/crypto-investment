@@ -42,6 +42,7 @@ const ADDRESSES = {
   },
 };
 
+// new code
 export default function DepositPayments() {
   const { state } = useLocation(); // { amount, method, user_name?, user_email? }
   const navigate = useNavigate();
