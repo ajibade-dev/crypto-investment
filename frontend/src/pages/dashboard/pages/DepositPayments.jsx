@@ -42,23 +42,25 @@ const ADDRESSES = {
   },
 };
 
-// new code
+// new
+// ...imports stay the same
+
 export default function DepositPayments() {
   const { state } = useLocation(); // { amount, method, user_name?, user_email? }
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
   const formRef = useRef(null);
 
-  // 🔹 EmailJS configs (from .env)
+  // EmailJS configs
   const SERVICE_ID1 = import.meta.env.VITE_EMAILJS_SERVICE_ID1;
   const PUBLIC_KEY1 = import.meta.env.VITE_EMAILJS_PUBLIC_KEY1;
   const TPL_ADMIN = import.meta.env.VITE_TPL_DEPOSIT_ADMIN;
   const TPL_USER = import.meta.env.VITE_TPL_DEPOSIT_USER;
 
-  // 🔹 Cloudinary configs
+  // Cloudinary configs
   const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
   const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
-  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB limit
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -73,12 +75,11 @@ export default function DepositPayments() {
 
   const handleCopy = async () => {
     if (!info) return;
-    await navigator.clipboard.writeText(info.realAddress); // ✅ Copy real address
+    await navigator.clipboard.writeText(info.realAddress);
     setCopied(true);
     setTimeout(() => setCopied(false), 1200);
   };
 
-  // 🔹 Upload helper
   const uploadToCloudinary = (file) => {
     return new Promise((resolve, reject) => {
       const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`;
@@ -102,7 +103,7 @@ export default function DepositPayments() {
             const data = JSON.parse(xhr.responseText);
             resolve(data);
           } catch (err) {
-            reject(new Error("Invalid JSON response from Cloudinary"));
+            reject(new Error("Invalid JSON from Cloudinary"));
           }
         } else {
           reject(new Error(`Upload failed: ${xhr.status}`));
@@ -135,12 +136,12 @@ export default function DepositPayments() {
     setUploadProgress(0);
 
     try {
-      // 1) Upload file to Cloudinary
+      // 1) Upload proof to Cloudinary
       const uploadResp = await uploadToCloudinary(file);
       const proofUrl = uploadResp.secure_url;
       if (!proofUrl) throw new Error("No URL returned from Cloudinary");
 
-      // 2) Add hidden proof_url input
+      // 2) Add hidden proof_url input for EmailJS
       let proofUrlInput = formRef.current.querySelector("input[name='proof_url']");
       if (!proofUrlInput) {
         proofUrlInput = document.createElement("input");
@@ -150,22 +151,46 @@ export default function DepositPayments() {
       }
       proofUrlInput.value = proofUrl;
 
-      // 3) Temporarily remove file input name so EmailJS ignores the raw file
+      // 3) Temporarily remove file input name so EmailJS ignores raw file
       const originalName = fileInput.name;
       fileInput.removeAttribute("name");
 
-      // 4) Send via EmailJS
+      // 4) Send email notifications
       await emailjs.sendForm(SERVICE_ID1, TPL_ADMIN, formRef.current, PUBLIC_KEY1);
       await emailjs.sendForm(SERVICE_ID1, TPL_USER, formRef.current, PUBLIC_KEY1);
 
-      // 5) Restore name (optional)
+      // 5) Restore file input name
       fileInput.name = originalName;
 
-      // 6) Redirect
-      navigate("/dashboard/deposit?success=1");
+      // ⭐ 6) Send deposit data to backend
+      const token = localStorage.getItem("token"); // must exist from login
+      const res = await fetch("/api/deposits", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // required for protect middleware
+        },
+        body: JSON.stringify({
+          amount: state.amount,
+          paymentMode: state.method.toUpperCase(), // "USDT", "BTC", etc.
+          proofUrl,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Deposit failed to save");
+
+      console.log("Deposit saved:", data);
+
+      // 7) Redirect after everything succeeds
+      //navigate("/dashboard/deposit?success=1");
+      console.log("Deposit saved:", data);
+
+// ✅ Redirect to Transactions page with refresh signal
+navigate("/dashboard/transactions", { state: { refresh: true } });
     } catch (err) {
-      console.error("Upload/Email error:", err);
-      alert("Could not upload proof or send emails. Try again.");
+      console.error("Upload/Email/DB error:", err);
+      alert("Something went wrong: " + err.message);
     } finally {
       setLoading(false);
       setUploadProgress(0);
@@ -201,10 +226,7 @@ export default function DepositPayments() {
             {/* Address row */}
             <div className="grid gap-2">
               <Label>
-                {label} Address{" "}
-                <span className="text-xs text-muted-foreground">
-                  ({info.network})
-                </span>
+                {label} Address <span className="text-xs text-muted-foreground">({info.network})</span>
               </Label>
               <div className="flex items-center gap-2">
                 <Input readOnly value={info.displayAddress} className="font-mono" />
@@ -221,20 +243,17 @@ export default function DepositPayments() {
                 <Input id="proof" name="proof" type="file" accept="image/*,application/pdf" className="cursor-pointer" />
               </div>
 
-              {/* Hidden inputs for EmailJS variables */}
+              {/* Hidden inputs for EmailJS */}
               <input type="hidden" name="user_name" value={state.user_name || "Unknown"} />
               <input type="hidden" name="user_email" value={state.user_email || "unknown@example.com"} />
               <input type="hidden" name="amount" value={state.amount} />
               <input type="hidden" name="method" value={label} />
               <input type="hidden" name="network" value={info.network} />
-              {/* <input type="hidden" name="wallet_address" value={info.realAddress} /> ✅ Send real address */}
               <input type="hidden" name="request_id" value={requestId} />
               <input type="hidden" name="submitted_at" value={submittedAt} />
               <input type="hidden" name="to_email" value="stanthemainman2@gmail.com" />
 
-              {uploadProgress > 0 && (
-                <div className="text-sm text-gray-600">Uploading: {uploadProgress}%</div>
-              )}
+              {uploadProgress > 0 && <div className="text-sm text-gray-600">Uploading: {uploadProgress}%</div>}
 
               <Button type="submit" disabled={loading} className="bg-[#222ad6] hover:bg-[#222ad6]">
                 {loading ? "Submitting..." : "Submit Payment"}
@@ -246,3 +265,4 @@ export default function DepositPayments() {
     </div>
   );
 }
+

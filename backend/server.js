@@ -7,7 +7,8 @@ import cors from "cors"
 import connectDB from './config/db.js';
 import userRoutes from './routes/userRoutes.js'
 import cookieParser from 'cookie-parser';
-
+import depositRoutes from './routes/depositRoutes.js'
+import transactionRoutes from "./routes/transactionRoutes.js"
 const port = process.env.PORT || 5000;
 connectDB();
 const app = express();
@@ -50,6 +51,8 @@ app.use(cors(corsOptions));
 
 
 app.use('/api/users', userRoutes)
+app.use('/api/deposits', depositRoutes);
+app.use("/api/transactions", transactionRoutes);
 // if (process.env.NODE_ENV == 'production'){
 //   const __dirname = path.resolve()
 //   app.use(express.static(path.join(__dirname, 'frontend/dist')))
