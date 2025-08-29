@@ -51,9 +51,9 @@ export default function Login() {
     dispatch(setCredentials({ ...res }));
 
     // ✅ Save token into localStorage
-    if (res.token) {
-      localStorage.setItem("token", res.token);
-    }
+    // if (res.token) {
+    //   localStorage.setItem("token", res.token);
+    // }
 
     navigate("/dashboard");
     toast.success("Login Successful");

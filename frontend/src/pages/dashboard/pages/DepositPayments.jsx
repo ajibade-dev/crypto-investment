@@ -175,7 +175,7 @@ console.log("📡 Full endpoint:", `${import.meta.env.VITE_API_URL}/api/transact
   credentials: "include",
   headers: {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`, // required for protect middleware
+    // Authorization: `Bearer ${token}`, // required for protect middleware
   },
   body: JSON.stringify({
     amount: state.amount,
