@@ -27,8 +27,8 @@ const ADDRESSES = {
     network: "ETH",
   },
   "usdt-trc20": {
-    displayAddress: "A61J3gLsJ6onxV2WVcgBWyAZqLEkUkeNL",
-    realAddress: "A61J3gLsJ6onxV2WVcgBWyAZqLEkUkeNL",
+    displayAddress: "TA61J3gLsJ6onxV2WVcgBWyAZqLEkUkeNL",
+    realAddress: "TA61J3gLsJ6onxV2WVcgBWyAZqLEkUkeNL",
     network: "TRON",
   },
   btc: {
