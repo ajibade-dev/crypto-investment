@@ -31,7 +31,8 @@ const whitelist = [
   'http://localhost:3000',              // local dev frontend
   // 'http://localhost:3000',              // (optional, in case you test React dev server)
   'https://crypto-investment-eight.vercel.app', // your current frontend
-   'https://www.coinflowanalysis.org/'        //new domain
+   'https://www.coinflowanalysis.org',        //new domain
+   'https://coinflowanalysis.org' // new domains
 ];
 
 const corsOptions = {
@@ -43,7 +44,7 @@ const corsOptions = {
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Cookie', 'Set-Cookie'],
 };
 
