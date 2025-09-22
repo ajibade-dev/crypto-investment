@@ -31,7 +31,7 @@ const whitelist = [
   'http://localhost:3000',              // local dev frontend
   // 'http://localhost:3000',              // (optional, in case you test React dev server)
   'https://crypto-investment-eight.vercel.app', // your current frontend
-  // 'https://yourcustomdomain.com'        // add custom domain when ready
+   'https://www.coinflowanalysis.org/'        //new domain
 ];
 
 const corsOptions = {
