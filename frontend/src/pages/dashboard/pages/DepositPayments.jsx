@@ -18,7 +18,7 @@ const ADDRESSES = {
   },
   "usdc-sol": {
     displayAddress: "4vmjeT42zSqVc3rnUj9dNgyejsewEqBFQtz3Jus2Wwkf",
-    realAddress: "54xnpZRHgxGN8Y4RMyqEDwoSx6eiDUcZejUjHv1FySJ2",
+    realAddress: "6ybPQv44V7bpXuYC3dW1LKU83wLRFhDJYRVYKPxFnA2k",
     network: "SOL",
   },
   "usdt-erc20": {
